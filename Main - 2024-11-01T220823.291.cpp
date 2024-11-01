@@ -127,6 +127,41 @@ void dfs(map<char,map<char,int>>u,char start,char goal, unordered_map<char,int>&
   }
 }
 
+void hillclimb(map<char,map<char,int>>u,char start,char goal, unordered_map<char,int>&vis)
+{
+  int best=1000;
+  char curr=start;
+  char next;
+  vis[curr]=1;
+  while(true)
+  {
+    bool modified=false;
+  for(auto i:u[curr])
+  {
+    
+    if((vis[i.first]!=1)&&(best>i.second))
+    {
+      best=i.second;
+      next=i.first;
+      vis[i.first]=1;
+      modified=true;
+    }
+    
+  }
+  if(modified)
+  {
+  cout<<"Traversing node "<<next<<"with heuristics "<<best<<endl; 
+  curr=next;
+  }
+  else
+  {
+  cout<<"Stopped on reaching a local minima"<<endl;
+  return;
+  }
+  }
+
+}
+
 int main() 
 {
   map<char,map<char,int>>u={
@@ -138,6 +173,24 @@ int main()
     {'E',{{'C',6}}},
     {'G',{{'D',5}}}
   };
+//   S':{'A':7.38,'B':6}, 
+// 'A':{'S':np.inf,'B':6,'D':5}, 
+// 'B':{'S':np.inf,'A':7.38,'C':7.58}, 
+// 'C':{'B':6,'E':np.inf}, 
+// 'E':{'C':7.58}, 
+// 'D':{'A':7.38,'G':0}, 
+// 'G':{'D':5} 
+  map<char,map<char,int>>hu={
+    {'S',{{'A',5},{'B',6}}},
+    {'A',{{'S',INT_MAX},{'B',6},{'D',4}}},
+    {'B',{{'S',INT_MAX},{'A',5},{'C',8}}},
+    {'C',{{'B',6},{'E',INT_MAX}}},
+    {'D',{{'A',5},{'G',0}}},
+    {'E',{{'C',8}}},
+    {'G',{{'D',4}}}
+  };
+  
+ 
   cout<<"BMS SEARCH: "<<endl;
   bms(u,'S','G');
   cout<<"BFS SEARCH: "<<endl;
@@ -148,5 +201,8 @@ int main()
   cout<<endl;
   cout<<"DFS SEARCH: "<<endl;
   dfs(u,'S','G',vis);
+  cout<<endl;
+  vis.clear();
+  hillclimb(hu,'S','G',vis);
 }
   
