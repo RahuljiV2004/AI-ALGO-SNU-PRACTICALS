@@ -1,6 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void bb(unordered_map<char, int>& vis,unordered_map<char, int> vis1, unordered_map<char, int> hu, unordered_map<char, unordered_map<char, int>> u, char st, char go) {
+    // Priority queue to hold {cost, node}
+    priority_queue<pair<int, char>, vector<pair<int, char>>, greater<pair<int, char>>> pq;
+    pq.push({0, st});
+    vis[st] = 0; // Initialize start node with cost 0
+
+
+      while(!pq.empty()){
+        char curr = pq.top().second;
+        int cost = pq.top().first;
+        cout << curr << " with cumulative cost: " << cost << endl;
+        pq.pop();
+        vis[curr]=1;
+        // Goal check
+        if (curr == go) {
+            cout << "Goal node reached with cost " << cost << endl;
+            return;
+        }
+
+        // Visit all neighbors of the current node
+        for (auto& i : u[curr]) {
+          if(vis[i.first]==0){
+            char neighbor = i.first;
+            int edgeCost = i.second;
+            int newCost = cost + edgeCost;
+            // vis[i.first]=1;
+            // Update if we find a cheaper path to the neighbor
+            if (vis1.find(neighbor) == vis1.end() || newCost < vis1[neighbor]) {
+                vis1[neighbor] = newCost;
+                pq.push({newCost, neighbor});
+            }
+        }
+        }
+    }
+
+    cout << "Goal node not reachable from the start node." << endl;
+}
 
 void beam(unordered_map<char,int>&vis,unordered_map<char,int>hu,unordered_map<char,unordered_map<char,int>>u,char st,char go,int bw)
 {
@@ -82,5 +119,7 @@ int main()
     
     unordered_map<char,int>vis;
     beam(vis,hu,u,'A','G',1);
+    vis.clear();
+    bb(vis,vis,hu,u,'A','G');
     return 0;
 }
