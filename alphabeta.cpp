@@ -27,7 +27,7 @@ int alpb(int h,int d,int alp,int bet,int ind,vector<int>&values,bool maxi)
     {
       int val=alpb(h,d+1,alp,bet,2*ind+i,values,true);
       best=min(best,val);
-      bet=min(best,alp);
+      bet=min(best,bet);
       if(bet<=alp)break;
     }
     return best;
